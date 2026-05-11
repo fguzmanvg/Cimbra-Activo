@@ -211,13 +211,13 @@ Tono: coach amigo, divertido pero motivador. Máximo 250 palabras.`;
     <div style={{ background: '#0A0A0F', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ textAlign: 'center' }}>
         <div style={{ fontSize: 40, marginBottom: 12 }}>🔥</div>
-        <div style={{ color: '#FF6B35', fontFamily: 'Georgia,serif', fontSize: 14, letterSpacing: 2 }}>CARGANDO...</div>
+        <div style={{ color: '#FF6B35', fontFamily: `Georgia,serif`, fontSize: 14, letterSpacing: 2 }}>CARGANDO...</div>
       </div>
     </div>
   );
 
   return (
-    <div style={{ background: '#0A0A0F', minHeight: '100vh', fontFamily: ''Georgia', serif', color: '#F0EDE8' }}>
+    <div style={{ background: '#0A0A0F', minHeight: '100vh', fontFamily: 'Georgia sans-serif', color: '#F0EDE8' }}>
       <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, background: 'radial-gradient(ellipse at 20% 20%, rgba(255,107,53,0.06) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(78,205,196,0.05) 0%, transparent 50%)' }} />
 
       {/* HEADER */}
@@ -227,12 +227,12 @@ Tono: coach amigo, divertido pero motivador. Máximo 250 palabras.`;
           <div style={{ fontSize: 20, fontWeight: 'bold' }}>2026 🔥</div>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <button onClick={() => setUserPicker(true)} style={{ background: currentUser ? 'rgba(255,107,53,0.15)' : 'rgba(255,255,255,0.06)', border: `1px solid ${currentUser ? 'rgba(255,107,53,0.4)' : 'rgba(255,255,255,0.12)'}`, borderRadius: 20, padding: '6px 12px', color: currentUser ? '#FF6B35' : '#aaa', fontSize: 12, cursor: 'pointer', fontFamily: 'Georgia,serif' }}>
+          <button onClick={() => setUserPicker(true)} style={{ background: currentUser ? 'rgba(255,107,53,0.15)' : 'rgba(255,255,255,0.06)', border: `1px solid ${currentUser ? 'rgba(255,107,53,0.4)' : 'rgba(255,255,255,0.12)'}`, borderRadius: 20, padding: '6px 12px', color: currentUser ? '#FF6B35' : '#aaa', fontSize: 12, cursor: 'pointer', fontFamily: `Georgia,serif` }}>
             {currentUser ? '👤 ' + MEMBERS.find(m => m.id === currentUser)?.name : '¿Quién soy?'}
           </button>
           <div style={{ display: 'flex', background: 'rgba(255,255,255,0.04)', borderRadius: 8, border: '1px solid rgba(255,255,255,0.08)' }}>
             {[['board', '📊'], ['ai', '🤖'], ['log', '✍️']].map(([v, icon]) => (
-              <button key={v} onClick={() => { setView(v); setSelectedMember(null); setAiSummary(''); }} style={{ padding: '7px 12px', background: view === v ? 'rgba(255,107,53,0.2)' : 'transparent', border: 'none', color: view === v ? '#FF6B35' : '#666', cursor: 'pointer', fontSize: 14, fontFamily: 'Georgia,serif' }}>{icon}</button>
+              <button key={v} onClick={() => { setView(v); setSelectedMember(null); setAiSummary(''); }} style={{ padding: '7px 12px', background: view === v ? 'rgba(255,107,53,0.2)' : 'transparent', border: 'none', color: view === v ? '#FF6B35' : '#666', cursor: 'pointer', fontSize: 14, fontFamily: `Georgia,serif` }}>{icon}</button>
             ))}
           </div>
         </div>
@@ -245,7 +245,7 @@ Tono: coach amigo, divertido pero motivador. Máximo 250 palabras.`;
             <div style={{ fontSize: 12, letterSpacing: 3, color: '#FF6B35', marginBottom: 16, textTransform: 'uppercase' }}>¿Quién eres?</div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
               {MEMBERS.map(m => (
-                <button key={m.id} onClick={() => { saveUser(m.id); setUserPicker(false); setView('log'); }} style={{ background: currentUser === m.id ? 'rgba(255,107,53,0.2)' : 'rgba(255,255,255,0.04)', border: `1px solid ${currentUser === m.id ? 'rgba(255,107,53,0.5)' : 'rgba(255,255,255,0.1)'}`, borderRadius: 20, padding: '7px 14px', color: currentUser === m.id ? '#FF6B35' : '#ccc', cursor: 'pointer', fontSize: 13, fontFamily: 'Georgia,serif' }}>{m.emoji} {m.name}</button>
+                <button key={m.id} onClick={() => { saveUser(m.id); setUserPicker(false); setView('log'); }} style={{ background: currentUser === m.id ? 'rgba(255,107,53,0.2)' : 'rgba(255,255,255,0.04)', border: `1px solid ${currentUser === m.id ? 'rgba(255,107,53,0.5)' : 'rgba(255,255,255,0.1)'}`, borderRadius: 20, padding: '7px 14px', color: currentUser === m.id ? '#FF6B35' : '#ccc', cursor: 'pointer', fontSize: 13, fontFamily: `Georgia,serif` }}>{m.emoji} {m.name}</button>
               ))}
             </div>
           </div>
@@ -269,7 +269,7 @@ Tono: coach amigo, divertido pero motivador. Máximo 250 palabras.`;
           <>
             <div style={{ display: 'flex', gap: 8, marginBottom: 20, overflowX: 'auto', paddingBottom: 4 }}>
               {[['all', 'Todos 🌟'], ...Object.entries(CATEGORY_LABELS).map(([k, v]) => [k, v])].map(([cat, label]) => (
-                <button key={cat} onClick={() => setFilterCat(cat)} style={{ flex: '0 0 auto', background: filterCat === cat ? (cat === 'all' ? 'rgba(255,107,53,0.2)' : `${CATEGORY_COLORS[cat]}20`) : 'rgba(255,255,255,0.04)', border: `1px solid ${filterCat === cat ? (cat === 'all' ? '#FF6B35' : CATEGORY_COLORS[cat]) : 'rgba(255,255,255,0.1)'}`, borderRadius: 20, padding: '5px 12px', color: filterCat === cat ? (cat === 'all' ? '#FF6B35' : CATEGORY_COLORS[cat]) : '#666', cursor: 'pointer', fontSize: 11, fontFamily: 'Georgia,serif' }}>{label}</button>
+                <button key={cat} onClick={() => setFilterCat(cat)} style={{ flex: '0 0 auto', background: filterCat === cat ? (cat === 'all' ? 'rgba(255,107,53,0.2)' : `${CATEGORY_COLORS[cat]}20`) : 'rgba(255,255,255,0.04)', border: `1px solid ${filterCat === cat ? (cat === 'all' ? '#FF6B35' : CATEGORY_COLORS[cat]) : 'rgba(255,255,255,0.1)'}`, borderRadius: 20, padding: '5px 12px', color: filterCat === cat ? (cat === 'all' ? '#FF6B35' : CATEGORY_COLORS[cat]) : '#666', cursor: 'pointer', fontSize: 11, fontFamily: `Georgia,serif` }}>{label}</button>
               ))}
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 12 }}>
@@ -321,7 +321,7 @@ Tono: coach amigo, divertido pero motivador. Máximo 250 palabras.`;
           const loggedToday = (md.logs || []).includes(getDateKey());
           return (
             <div>
-              <button onClick={() => { setSelectedMember(null); setAiSummary(''); }} style={{ background: 'none', border: 'none', color: '#FF6B35', cursor: 'pointer', fontSize: 13, marginBottom: 20, padding: 0, fontFamily: 'Georgia,serif' }}>← tablero</button>
+              <button onClick={() => { setSelectedMember(null); setAiSummary(''); }} style={{ background: 'none', border: 'none', color: '#FF6B35', cursor: 'pointer', fontSize: 13, marginBottom: 20, padding: 0, fontFamily: `Georgia,serif` }}>← tablero</button>
               <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20, padding: 22, marginBottom: 20 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
@@ -356,7 +356,7 @@ Tono: coach amigo, divertido pero motivador. Máximo 250 palabras.`;
 
               {/* AI SUMMARY */}
               <div style={{ marginBottom: 20 }}>
-                <button onClick={() => getAiSummary(member)} disabled={aiLoading} style={{ width: '100%', background: aiLoading ? 'rgba(255,255,255,0.03)' : 'rgba(78,205,196,0.1)', border: '1px solid rgba(78,205,196,0.3)', borderRadius: 12, padding: '13px', color: '#4ECDC4', fontSize: 14, cursor: aiLoading ? 'default' : 'pointer', fontFamily: 'Georgia,serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                <button onClick={() => getAiSummary(member)} disabled={aiLoading} style={{ width: '100%', background: aiLoading ? 'rgba(255,255,255,0.03)' : 'rgba(78,205,196,0.1)', border: '1px solid rgba(78,205,196,0.3)', borderRadius: 12, padding: '13px', color: '#4ECDC4', fontSize: 14, cursor: aiLoading ? 'default' : 'pointer', fontFamily: `Georgia,serif`, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                   {aiLoading ? '🤖 Analizando su progreso...' : '🤖 Generar resumen IA de su progreso'}
                 </button>
                 {aiSummary && (
@@ -381,9 +381,9 @@ Tono: coach amigo, divertido pero motivador. Máximo 250 palabras.`;
                   <div style={{ fontSize: 11, letterSpacing: 2, color: '#FF6B35', textTransform: 'uppercase', marginBottom: 14 }}>
                     {loggedToday ? '✓ Ya registraste hoy — agregar más' : 'Registrar actividad de hoy'}
                   </div>
-                  <input value={logActivity} onChange={e => setLogActivity(e.target.value)} placeholder='¿Qué hiciste hoy?' style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, padding: '12px 14px', color: '#F0EDE8', fontSize: 14, fontFamily: 'Georgia,serif', marginBottom: 10, boxSizing: 'border-box' }} />
-                  <input value={logNote} onChange={e => setLogNote(e.target.value)} placeholder='Detalle: km, kg, páginas, tiempo...' style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, padding: '10px 14px', color: '#999', fontSize: 13, fontFamily: 'Georgia,serif', marginBottom: 14, boxSizing: 'border-box' }} />
-                  <button onClick={() => submitActivity(member.id)} disabled={saving} style={{ width: '100%', background: saving ? '#333' : '#FF6B35', border: 'none', borderRadius: 10, padding: '13px', color: '#fff', fontSize: 15, fontWeight: 'bold', cursor: saving ? 'default' : 'pointer', fontFamily: 'Georgia,serif' }}>{saving ? 'Guardando...' : 'Registrar ✓'}</button>
+                  <input value={logActivity} onChange={e => setLogActivity(e.target.value)} placeholder='¿Qué hiciste hoy?' style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, padding: '12px 14px', color: '#F0EDE8', fontSize: 14, fontFamily: `Georgia,serif`, marginBottom: 10, boxSizing: 'border-box' }} />
+                  <input value={logNote} onChange={e => setLogNote(e.target.value)} placeholder='Detalle: km, kg, páginas, tiempo...' style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, padding: '10px 14px', color: '#999', fontSize: 13, fontFamily: `Georgia,serif`, marginBottom: 14, boxSizing: 'border-box' }} />
+                  <button onClick={() => submitActivity(member.id)} disabled={saving} style={{ width: '100%', background: saving ? '#333' : '#FF6B35', border: 'none', borderRadius: 10, padding: '13px', color: '#fff', fontSize: 15, fontWeight: 'bold', cursor: saving ? 'default' : 'pointer', fontFamily: `Georgia,serif` }}>{saving ? 'Guardando...' : 'Registrar ✓'}</button>
                   {showSuccess && <div style={{ marginTop: 10, textAlign: 'center', color: '#4ECDC4', fontSize: 13 }}>¡Guardado! 🎉</div>}
                 </div>
               )}
@@ -416,7 +416,7 @@ Tono: coach amigo, divertido pero motivador. Máximo 250 palabras.`;
             <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: 20, marginBottom: 24 }}>
               <div style={{ fontSize: 11, letterSpacing: 2, color: '#4ECDC4', textTransform: 'uppercase', marginBottom: 4 }}>📊 Reporte grupal</div>
               <div style={{ fontSize: 12, color: '#555', marginBottom: 14 }}>Top 3, logros destacados, quién necesita motivación y reto grupal de la semana</div>
-              <button onClick={getGroupSummary} disabled={groupLoading} style={{ width: '100%', background: groupLoading ? 'rgba(255,255,255,0.03)' : 'rgba(78,205,196,0.12)', border: '1px solid rgba(78,205,196,0.3)', borderRadius: 10, padding: '14px', color: '#4ECDC4', fontSize: 14, cursor: groupLoading ? 'default' : 'pointer', fontFamily: 'Georgia,serif' }}>
+              <button onClick={getGroupSummary} disabled={groupLoading} style={{ width: '100%', background: groupLoading ? 'rgba(255,255,255,0.03)' : 'rgba(78,205,196,0.12)', border: '1px solid rgba(78,205,196,0.3)', borderRadius: 10, padding: '14px', color: '#4ECDC4', fontSize: 14, cursor: groupLoading ? 'default' : 'pointer', fontFamily: `Georgia,serif` }}>
                 {groupLoading ? '🤖 Analizando al grupo completo...' : '🤖 Generar reporte grupal'}
               </button>
               {groupSummary && (
@@ -436,7 +436,7 @@ Tono: coach amigo, divertido pero motivador. Máximo 250 palabras.`;
                 return (
                   <button key={member.id}
                     onClick={() => { if (!hasActivity) return; setSelectedMember(member); setView('board'); setAiSummary(''); setTimeout(() => getAiSummary(member), 200); }}
-                    style={{ background: hasActivity ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.01)', border: `1px solid ${hasActivity ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.03)'}`, borderRadius: 12, padding: '14px 16px', cursor: hasActivity ? 'pointer' : 'default', textAlign: 'left', fontFamily: 'Georgia,serif', display: 'flex', alignItems: 'center', gap: 12, opacity: hasActivity ? 1 : 0.4 }}>
+                    style={{ background: hasActivity ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.01)', border: `1px solid ${hasActivity ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.03)'}`, borderRadius: 12, padding: '14px 16px', cursor: hasActivity ? 'pointer' : 'default', textAlign: 'left', fontFamily: `Georgia,serif`, display: 'flex', alignItems: 'center', gap: 12, opacity: hasActivity ? 1 : 0.4 }}>
                     <span style={{ fontSize: 24 }}>{member.emoji}</span>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: 14, fontWeight: 'bold', color: '#F0EDE8' }}>{member.name}</div>
@@ -460,7 +460,7 @@ Tono: coach amigo, divertido pero motivador. Máximo 250 palabras.`;
                 <div style={{ fontSize: 48, marginBottom: 16 }}>👋</div>
                 <div style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>¡Hola!</div>
                 <div style={{ color: '#666', marginBottom: 24, lineHeight: 1.6 }}>Primero dinos quién eres</div>
-                <button onClick={() => setUserPicker(true)} style={{ background: 'rgba(255,107,53,0.2)', border: '1px solid #FF6B35', borderRadius: 12, padding: '14px 28px', color: '#FF6B35', cursor: 'pointer', fontSize: 15, fontFamily: 'Georgia,serif' }}>Seleccionar mi perfil</button>
+                <button onClick={() => setUserPicker(true)} style={{ background: 'rgba(255,107,53,0.2)', border: '1px solid #FF6B35', borderRadius: 12, padding: '14px 28px', color: '#FF6B35', cursor: 'pointer', fontSize: 15, fontFamily: `Georgia,serif` }}>Seleccionar mi perfil</button>
               </div>
             ) : (() => {
               const member = MEMBERS.find(m => m.id === currentUser);
@@ -478,9 +478,9 @@ Tono: coach amigo, divertido pero motivador. Máximo 250 palabras.`;
                   </div>
                   <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: 20, marginBottom: 16 }}>
                     <div style={{ fontSize: 11, letterSpacing: 2, color: '#FF6B35', marginBottom: 14, textTransform: 'uppercase' }}>¿Qué hiciste hoy?</div>
-                    <input value={logActivity} onChange={e => setLogActivity(e.target.value)} placeholder='Fui al gym, corrí 5km, leí 30 págs...' style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, padding: '14px', color: '#F0EDE8', fontSize: 15, fontFamily: 'Georgia,serif', marginBottom: 10, boxSizing: 'border-box' }} />
-                    <input value={logNote} onChange={e => setLogNote(e.target.value)} placeholder='Detalle: tiempo, distancia, páginas...' style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, padding: '12px', color: '#888', fontSize: 13, fontFamily: 'Georgia,serif', marginBottom: 16, boxSizing: 'border-box' }} />
-                    <button onClick={() => submitActivity(currentUser)} disabled={saving} style={{ width: '100%', background: saving ? '#222' : 'linear-gradient(135deg, #FF6B35, #ff8f5e)', border: 'none', borderRadius: 12, padding: '16px', color: '#fff', fontSize: 16, fontWeight: 'bold', cursor: saving ? 'default' : 'pointer', fontFamily: 'Georgia,serif' }}>{saving ? 'Guardando...' : 'Registrar actividad ✓'}</button>
+                    <input value={logActivity} onChange={e => setLogActivity(e.target.value)} placeholder='Fui al gym, corrí 5km, leí 30 págs...' style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, padding: '14px', color: '#F0EDE8', fontSize: 15, fontFamily: `Georgia,serif`, marginBottom: 10, boxSizing: 'border-box' }} />
+                    <input value={logNote} onChange={e => setLogNote(e.target.value)} placeholder='Detalle: tiempo, distancia, páginas...' style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, padding: '12px', color: '#888', fontSize: 13, fontFamily: `Georgia,serif`, marginBottom: 16, boxSizing: 'border-box' }} />
+                    <button onClick={() => submitActivity(currentUser)} disabled={saving} style={{ width: '100%', background: saving ? '#222' : 'linear-gradient(135deg, #FF6B35, #ff8f5e)', border: 'none', borderRadius: 12, padding: '16px', color: '#fff', fontSize: 16, fontWeight: 'bold', cursor: saving ? 'default' : 'pointer', fontFamily: `Georgia,serif` }}>{saving ? 'Guardando...' : 'Registrar actividad ✓'}</button>
                     {showSuccess && <div style={{ marginTop: 12, textAlign: 'center', color: '#4ECDC4', fontSize: 14 }}>¡Guardado para todos! 🎉</div>}
                   </div>
                   <div style={{ fontSize: 10, letterSpacing: 3, color: '#444', textTransform: 'uppercase', marginBottom: 12 }}>Mis retos</div>
