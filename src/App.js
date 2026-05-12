@@ -85,7 +85,7 @@ function getStreak(logs) {
 async function callClaude(prompt) {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'x-api-key': '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', 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 1000,
