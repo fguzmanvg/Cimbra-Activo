@@ -358,6 +358,8 @@ export default function App() {
   const [saving, setSaving] = useState(false);
   const [summary, setSummary] = useState('');
   const [groupSummary, setGroupSummary] = useState('');
+  const [editingEntry, setEditingEntry] = useState(null);
+  const [editValues, setEditValues] = useState({});
 
   useEffect(() => {
     const unsub = onValue(ref(db, 'activities'), snap => {
@@ -401,6 +403,26 @@ export default function App() {
 
   function showGroupSummary() {
     setGroupSummary(generateGroupSummary(data));
+  }
+
+  async function deleteEntry(memberId, entryTs) {
+    const md = getMD(memberId);
+    const newNotes = (md.notes || []).filter(n => n.ts !== entryTs);
+    const newLogs = newNotes.map(n => n.date);
+    const newProgress = Math.max(0, (md.progress || 0) - 2);
+    try {
+      await set(ref(db, 'activities/' + memberId), { logs: newLogs, notes: newNotes, progress: newProgress });
+    } catch (e) { alert('Error al borrar.'); }
+  }
+
+  async function saveEditEntry(memberId, entryTs) {
+    const md = getMD(memberId);
+    const newNotes = (md.notes || []).map(n => n.ts === entryTs ? { ...n, ...editValues } : n);
+    try {
+      await set(ref(db, 'activities/' + memberId), { ...md, notes: newNotes });
+      setEditingEntry(null);
+      setEditValues({});
+    } catch (e) { alert('Error al guardar.'); }
   }
 
   const totalLogs = Object.values(data).reduce((s, d) => s + (d.logs?.length || 0), 0);
@@ -561,15 +583,67 @@ export default function App() {
               {md.notes?.length > 0 && (
                 <div>
                   <div style={{ fontSize: 10, letterSpacing: 3, color: '#444', textTransform: 'uppercase', marginBottom: 12 }}>Historial</div>
-                  {[...(md.notes || [])].reverse().slice(0, 15).map((n, i) => {
+                  {[...(md.notes || [])].reverse().slice(0, 20).map((n, i) => {
                     const resumen = Object.entries(n)
                       .filter(([k]) => !['date','ts','text'].includes(k))
                       .map(([k, v]) => v === true || v === 'true' ? k.replace(/_/g,' ') + ': si' : (v === false || v === 'false' || v === '') ? null : k.replace(/_/g,' ') + ': ' + v)
                       .filter(Boolean).join(' · ');
+                    const isEditing = editingEntry === n.ts;
+                    const canEdit = isMe;
                     return (
-                      <div key={i} style={{ display: 'flex', gap: 12, padding: '9px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                        <div style={{ fontSize: 10, color: '#444', flexShrink: 0 }}>{n.date}</div>
-                        <div style={{ fontSize: 13, color: '#bbb' }}>{resumen || n.text || '-'}</div>
+                      <div key={i} style={{ padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                        <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                          <div style={{ fontSize: 10, color: '#444', flexShrink: 0, paddingTop: 2 }}>{n.date}</div>
+                          <div style={{ flex: 1, fontSize: 13, color: '#bbb' }}>{resumen || n.text || '-'}</div>
+                          {canEdit && !isEditing && (
+                            <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                              <button onClick={() => { setEditingEntry(n.ts); setEditValues({...n}); }}
+                                style={{ background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: 6, padding: '3px 8px', color: '#888', cursor: 'pointer', fontSize: 11, fontFamily: 'Georgia,serif' }}>✏️</button>
+                              <button onClick={() => { if (window.confirm('Borrar este registro?')) deleteEntry(member.id, n.ts); }}
+                                style={{ background: 'rgba(255,80,80,0.1)', border: 'none', borderRadius: 6, padding: '3px 8px', color: '#ff6b6b', cursor: 'pointer', fontSize: 11, fontFamily: 'Georgia,serif' }}>🗑️</button>
+                            </div>
+                          )}
+                        </div>
+                        {isEditing && (
+                          <div style={{ marginTop: 12, padding: 14, background: 'rgba(255,107,53,0.06)', borderRadius: 10, border: '1px solid rgba(255,107,53,0.2)' }}>
+                            <div style={{ fontSize: 11, color: '#FF6B35', marginBottom: 12, letterSpacing: 1 }}>EDITANDO REGISTRO</div>
+                            {member.fields.map(field => (
+                              <div key={field.key} style={{ marginBottom: 10 }}>
+                                <div style={{ fontSize: 11, color: '#666', marginBottom: 4 }}>{field.label}</div>
+                                {field.type === 'yesno' && (
+                                  <div style={{ display: 'flex', gap: 6 }}>
+                                    {['Si', 'No'].map(opt => (
+                                      <button key={opt} onClick={() => setEditValues(prev => ({ ...prev, [field.key]: opt === 'Si' }))}
+                                        style={{ flex: 1, padding: '8px', borderRadius: 6, border: '1px solid ' + (editValues[field.key] === (opt === 'Si') ? color : 'rgba(255,255,255,0.1)'), background: editValues[field.key] === (opt === 'Si') ? color + '22' : 'rgba(255,255,255,0.03)', color: editValues[field.key] === (opt === 'Si') ? color : '#888', cursor: 'pointer', fontFamily: 'Georgia,serif', fontSize: 13 }}>{opt}</button>
+                                    ))}
+                                  </div>
+                                )}
+                                {field.type === 'number' && (
+                                  <input type='number' value={editValues[field.key] || ''} onChange={e => setEditValues(prev => ({ ...prev, [field.key]: e.target.value }))}
+                                    style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '8px 12px', color: '#F0EDE8', fontSize: 14, fontFamily: 'Georgia,serif', boxSizing: 'border-box' }} />
+                                )}
+                                {field.type === 'text' && (
+                                  <input type='text' value={editValues[field.key] || ''} onChange={e => setEditValues(prev => ({ ...prev, [field.key]: e.target.value }))}
+                                    style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '8px 12px', color: '#F0EDE8', fontSize: 13, fontFamily: 'Georgia,serif', boxSizing: 'border-box' }} />
+                                )}
+                                {field.type === 'select' && (
+                                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                                    {field.options.map(opt => (
+                                      <button key={opt} onClick={() => setEditValues(prev => ({ ...prev, [field.key]: opt }))}
+                                        style={{ padding: '6px 12px', borderRadius: 16, border: '1px solid ' + (editValues[field.key] === opt ? color : 'rgba(255,255,255,0.1)'), background: editValues[field.key] === opt ? color + '22' : 'rgba(255,255,255,0.03)', color: editValues[field.key] === opt ? color : '#888', cursor: 'pointer', fontFamily: 'Georgia,serif', fontSize: 12 }}>{opt}</button>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                            <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+                              <button onClick={() => saveEditEntry(member.id, n.ts)}
+                                style={{ flex: 1, background: '#FF6B35', border: 'none', borderRadius: 8, padding: '10px', color: '#fff', fontSize: 13, fontWeight: 'bold', cursor: 'pointer', fontFamily: 'Georgia,serif' }}>Guardar</button>
+                              <button onClick={() => { setEditingEntry(null); setEditValues({}); }}
+                                style={{ flex: 1, background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: 8, padding: '10px', color: '#888', fontSize: 13, cursor: 'pointer', fontFamily: 'Georgia,serif' }}>Cancelar</button>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     );
                   })}
