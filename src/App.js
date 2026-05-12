@@ -83,17 +83,18 @@ function getStreak(logs) {
 }
 
 async function callClaude(prompt) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': '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', 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1000,
-      messages: [{ role: 'user', content: prompt }]
-    })
-  });
+  const res = await fetch(
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyB949sYDRgUWiMeB8cR9WlYfezalEz1rNQ',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }]
+      })
+    }
+  );
   const data = await res.json();
-  return data.content?.[0]?.text || '';
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
 }
 
 export default function App() {
